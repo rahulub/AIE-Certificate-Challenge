@@ -12,6 +12,16 @@ ai-realtor/
 │   │   └── chat.py          # /api/chat streaming endpoint
 │   ├── requirements.txt
 │   └── .env.example         # Copy to .env and add your API keys
+├── eval/                     # RAGAS evaluation for RAG quality
+│   ├── evaluate.py           # Run RAGAS metrics (context precision, recall, faithfulness, etc.)
+│   ├── generate_testset.py   # Generate synthetic test set from docs
+│   ├── json_to_pdf.py        # Export test set to PDF report
+│   ├── pyproject.toml        # Python deps (ragas, langchain, openai)
+│   └── data/
+│       ├── ragas_testset.json    # Pre-built RAGAS test set (questions + references)
+│       ├── ragas_testset.pdf     # Human-readable test set report
+│       ├── eval_results.json     # Evaluation output (scores)
+│       └── home_inspection_reference.txt  # Fallback doc when no PDFs
 └── frontend/
     ├── public/
     │   └── index.html
@@ -51,6 +61,14 @@ cd frontend
 npm install
 npm start
 ```
+
+## Evaluation (RAGAS)
+
+The `eval/` directory contains RAGAS-based evaluation for the RAG pipeline. See [eval/README.md](eval/README.md) for setup and workflow.
+
+- **Setup:** `cd eval && uv sync` (requires `OPENAI_API_KEY`)
+- **Run evaluation:** `uv run python evaluate.py` → outputs `data/eval_results.json`
+- **Generate test set:** `uv run python generate_testset.py` (optional, pre-built set included)
 
 ## What to implement
 
