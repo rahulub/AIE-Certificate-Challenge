@@ -14,6 +14,7 @@ Buyers must act quickly while juggling many property decisions and a large amoun
 
 
 3. Create a list of questions or input-output pairs that you can use to evaluate your application
+
 Q: Find out the red flags in propery inspection report
 A: Here are red flags from the inspection report, in order of Critical, Major and Minor
 
@@ -30,6 +31,9 @@ A. The neighborhood is described as charming and well-located, with close proxim
 
 Proposed Solution: 
 
+AI Realtor is a chat-based app that helps users find red flags in home inspection reports. Users first see a landing page with the tagline “Property Analyzer” and a short “How it works” flow (Enter Property → Upload Report → Get Analysis). They enter a property address, upload a PDF inspection report (sent to the backend for ingestion), and choose focus areas from categories such as Home Structure (Foundation, Roof, Water Damage, Mold), Home Systems (Plumbing, Electrical, HVAC), Home Details (Appliances, Windows, Flooring), and Neighborhood (School Quality, Walkability, Safety). Custom priorities are supported. After submit, they move to a chat panel where they can ask natural-language questions; responses stream in real time, show severity labels (Critical / Major / Minor), and include page citations from the report. Conversation history is persisted so users can follow up without re-explaining context.
+
+Tech stack and architecture: The frontend uses Next.js 16 with React 19, shadcn/ui (Radix), Tailwind CSS, react-markdown, and Lucide icons. The backend is FastAPI and Uvicorn, with a LangGraph ReAct agent driven by GPT-4o-mini (via LangChain/OpenAI). PDFs are processed with pypdf, chunked by page, embedded with OpenAI, and stored in Qdrant. The agent uses three tools: search_red_flag_guidelines and search_inspection_report (vector retrieval from reference docs and user reports) and web_search (Tavily) for schools, neighborhood, and area info. Optional Cohere reranking improves relevance. Redis stores chat threads. Together, this forms a RAG-based system with streaming, tool use, and multi-turn conversation.
 
 
 2.  Create an infrastructure diagram of your stack showing how everything fits together.  Write one sentence on why you made each tooling choice.
@@ -43,23 +47,137 @@ Proposed Solution:
     8. User interface
     9. Deployment tool
     10. Any other components you need
+
 3. What are the RAG and agent components of your project, exactly?
 
+## RAG Components
+
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| **Chunker** | `rag/chunker.py` | Splits each PDF page into overlapping chunks (500 chars, 50 overlap). `chunk_by_pages()` preserves page numbers (1-indexed) for later citations. |
+| **Embedder** | `rag/embedder.py` | Converts text to vectors using `text-embedding-3-small` (1536 dimensions). Exposes `embed_text()` and `embed_batch()`. |
+| **Store** | `rag/store.py` | Qdrant vector database with two collections: `reference_guidelines` (backend/data PDFs) and `user_reports` (uploaded reports). Cosine similarity search via `search()`. |
+| **Retriever** | `rag/retriever.py` | `retrieve_from_reference()` and `retrieve_from_report()` embed the query, run `search()`, and format results as `[N] source — Page X\n<text>`. |
+| **Retriever (Cohere)** | `rag/retriever_cohere.py` | Cohere-reranked versions that retrieve more candidates, rerank with `rerank-english-v3.0`, and return the top-k. Used when the base search is too noisy. |
+
+**RAG pipeline:** PDF → `extract_pages_from_pdf` (pypdf) → `chunk_by_pages` → `embed_batch` → `upsert_chunks` into Qdrant. Query path: embed query → `search` → (optional rerank) → formatted chunks returned to the agent.
+
+---
+
+## Agent Components
+
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| **Agent** | `agent.py` | LangGraph ReAct agent via `create_react_agent()`. Uses GPT-4o-mini. `run_agent()` streams tokens with `agent.astream()` (`stream_mode="messages"`). |
+| **System Prompt** | `agent.py` | Defines tool use (RAG vs web search), severity ordering, page citations, user preferences, and follow-up behavior. |
+| **Tools** | `tools.py` | LangChain tools: `search_red_flag_guidelines`, `search_inspection_report`, `web_search` (Tavily). Optional Cohere variants: `search_red_flag_guidelines_advanced`, `search_inspection_report_advanced`. |
+| **Orchestration** | `routers/chat.py` | Accepts chat request, loads history from Redis, calls `run_agent()`, streams SSE, writes new messages to Redis. |
+
+**Agent flow:** User message (+ context) → `run_agent()` → ReAct loop (LLM chooses tools, calls them, uses results) → streams answer. RAG tools supply reference and inspection content; web search supplies schools, neighborhood, etc.
+
+
 ### Task 3: Collect your own data (RAG) and choose at least one external API to use (Agent)
-
-**You are an AI Systems Engineer.**  The AI Solutions Engineer has handed off the plan to you. *At a minimum*, you’ll need to implement a simple Agentic RAG solution that includes two aspects:
-
-1. Your own personal data, uploaded to your application (e.g., RAG)
-2. The ability to search publicly available data (e.g., a simple agentic search tool like [Tavily](https://tavily.com/))
-
-*Hints:*  
-- *Ask other real people (ideally the people you’re building for!) what they think.*
-- *What are the specific questions that your user is likely to ask of your application?  **Write these down**.*
   
 **✅ Deliverables**
 
 1. Describe the default chunking strategy that you will use for your data.  Why did you make this decision?
+
+## Default Chunking Strategy
+
+**Page-aware chunking** with:
+
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| **Chunk size** | 500 characters | Max characters per chunk |
+| **Overlap** | 50 characters | Shared characters between adjacent chunks |
+| **Unit** | Page | Chunking happens **per page**; each chunk keeps its page number |
+
+**Flow:**
+1. PDF text is taken page-by-page.
+2. Each page is split into overlapping segments of 500 characters with 50-character overlap.
+3. Each chunk is stored as `{"text": str, "page_number": int}` (page numbers are 1-indexed).
+4. Chunks are embedded and stored in Qdrant with `source` and `page_number` in the payload.
+
+---
+
+## Why These Choices?
+
+**1. Page-aware chunking**
+
+Inspection reports are page-based, and users expect citations like “page 7.” By chunking within pages and storing `page_number`, the retriever can return exact page references so the agent can say “found on page 7” instead of generic citations.
+
+**2. 500-character chunks**
+
+- Keeps chunks small enough for the LLM context while still holding whole findings (e.g., issue + description).
+- Many inspection findings fit in 1–2 short paragraphs, so 500 characters limits splitting a single finding across chunks.
+- Balances specificity (less noise per chunk) with enough context to interpret the finding.
+
+**3. 50-character overlap**
+
+- Reduces the chance of cutting a finding in the middle.
+- Preserves continuity around boundaries (e.g., “defect” and its description in the same chunk).
+- 50 characters adds useful overlap without too much duplication.
+
+**4. Character-based splitting**
+
+- No sentence or paragraph logic: character boundaries are simple and robust across layouts (bullets, lists, tables).
+- Overlap helps compensate for possible cuts in the middle of words or sentences.
+
+
 2. Describe your data source and the external API you plan to use, as well as what role they will play in your solution. Discuss how they interact during usage. 
+
+## Data Sources
+
+### 1. Reference Guidelines
+
+- **Source:** PDF files in `backend/data/`
+- **Content:** Expert home-inspection red-flag guidance (foundation, roof, plumbing, electrical, HVAC, water damage, mold, structural, septic)
+- **Ingestion:** At backend startup via `auto_ingest_data_dir()`
+- **Storage:** Qdrant collection `reference_guidelines`
+- **Role:** Defines what to look for; used internally and not cited to users
+
+### 2. User Inspection Reports
+
+- **Source:** PDF uploads via the frontend (`POST /api/ingest`)
+- **Content:** Property-specific inspection report
+- **Ingestion:** On upload: extract text → chunk → embed → upsert
+- **Storage:** Qdrant collection `user_reports`
+- **Role:** Source of findings and page citations; cited answers come from this report
+
+---
+
+## External APIs and Services
+
+| Service | Role |
+|---------|------|
+| **OpenAI** | LLM (`gpt-4o-mini`) and embeddings (`text-embedding-3-small`); powers the agent and RAG retrieval |
+| **Qdrant** | Vector store for reference and user chunks; semantic search |
+| **Redis** | Chat history per `thread_id` for multi-turn conversations |
+| **Tavily** | Web search for schools, neighborhood, walkability, safety, amenities when the report lacks this data |
+| **Cohere** | Optional reranking of RAG results when retrieval is noisy |
+
+---
+
+## How They Interact During Usage
+
+1. **Ingestion (startup):** Reference PDFs in `backend/data/` are extracted, chunked, embedded with OpenAI, and stored in Qdrant.
+
+2. **User upload:** Inspection report PDF is extracted, chunked, embedded, and stored in Qdrant’s `user_reports` collection.
+
+3. **Chat request:** User asks questions (e.g., roof issues, schools). If a `thread_id` exists, conversation history is loaded from Redis.
+
+4. **Agent loop:** The LLM selects tools:
+   - **Property/structure:** `search_red_flag_guidelines` and `search_inspection_report` query Qdrant; optional Cohere reranking.
+   - **Schools, neighborhood, etc.:** `web_search` (Tavily) with the property address in the query.
+
+5. **Retrieval flow:** Query is embedded with OpenAI → Qdrant search → optional Cohere rerank → formatted chunks sent to the LLM.
+
+6. **Response:** LLM combines tool outputs, orders by severity, cites page numbers from the user report, and streams the answer. New messages are saved to Redis for the thread.
+
+---
+
+**Summary:** Two data sources (reference guidelines and user inspection reports), plus external services for LLM, embeddings, vector search, chat persistence, web search, and optional reranking. They interact through the ReAct agent: RAG tools retrieve from Qdrant; the web search tool calls Tavily; and the LLM synthesizes all outputs into the final answer.
+
 
 ### Task 4: Build an end-to-end Agentic RAG application using a production-grade stack and your choice of commercial off-the-shelf model(s)
 
