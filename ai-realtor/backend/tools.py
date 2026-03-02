@@ -25,7 +25,7 @@ async def search_inspection_report(query: str, top_k: int = 5) -> str:
 
 
 @tool
-async def search_red_flag_guidelines_advanced(query: str, top_k: int = 3) -> str:
+async def search_red_flag_guidelines_advanced(query: str, top_k: int = 5) -> str:
     """Searches the reference knowledge base with Cohere reranking for higher-precision results.
     Use when standard search_red_flag_guidelines returns too many irrelevant results."""
     from rag.retriever_cohere import retrieve_from_reference_cohere
@@ -33,7 +33,7 @@ async def search_red_flag_guidelines_advanced(query: str, top_k: int = 3) -> str
 
 
 @tool
-async def search_inspection_report_advanced(query: str, top_k: int = 3) -> str:
+async def search_inspection_report_advanced(query: str, top_k: int = 5) -> str:
     """Searches the user's inspection report with Cohere reranking for higher-precision results.
     Use when standard search_inspection_report returns too many irrelevant results."""
     from rag.retriever_cohere import retrieve_from_report_cohere
@@ -55,3 +55,13 @@ def get_tools():
     if os.getenv("COHERE_API_KEY"):
         tools.extend([search_red_flag_guidelines_advanced, search_inspection_report_advanced])
     return tools
+
+
+def get_tools_for_eval():
+    """Returns only the 3 base tools for RAGAS evaluation (no Cohere advanced)."""
+    return [search_red_flag_guidelines, search_inspection_report, web_search]
+
+
+def get_tools_for_advanced_eval():
+    """Returns the 3 advanced tools (Cohere reranked) for RAGAS evaluation."""
+    return [search_red_flag_guidelines_advanced, search_inspection_report_advanced, web_search]

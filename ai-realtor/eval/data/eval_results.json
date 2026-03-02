@@ -1,10 +1,11 @@
 {
+  "retriever": "basic",
   "scores": {
-    "context_precision": 0.6944444444076389,
-    "context_recall": 0.8333333333333334,
-    "faithfulness": 0.9195075757575758,
-    "answer_relevancy": 0.8832501923995463,
-    "answer_correctness": 0.7186898900009525
+    "context_precision": 0.6944444444069444,
+    "context_recall": 0.9166666666666666,
+    "faithfulness": 0.9278409090909091,
+    "answer_relevancy": 0.8786309233555868,
+    "answer_correctness": 0.7028536612438093
   },
   "scores_per_row": [
     {
@@ -18,13 +19,13 @@
       "reference_contexts": [
         "Red\u00a0Flags Property\u00a0\nInspection\n2018"
       ],
-      "response": "The term 'Red Flags Property' refers to visual signs or indications of defects in a structure or property, such as cracks, sloping floors, and malfunctioning fixtures, that may indicate underlying issues during a property inspection.",
+      "response": "The term 'Red Flags Property' refers to visual signs or indications of defects in a structure or property, such as cracks, sloping floors, and malfunctioning fixtures, which are identified during property inspections.",
       "reference": "The term 'Red Flags Property' refers to properties that may have potential risks or issues that need to be assessed, particularly in the context of inspections conducted in 2018.",
       "context_precision": 0.0,
-      "context_recall": 0.0,
+      "context_recall": 1.0,
       "faithfulness": 1.0,
-      "answer_relevancy": 0.9805945151750842,
-      "answer_correctness": 0.5654240764965939
+      "answer_relevancy": 0.9708917727626266,
+      "answer_correctness": 0.6071734189916886
     },
     {
       "user_input": "What are some signs of a defect in a propperty's foundation?",
@@ -37,13 +38,13 @@
       "reference_contexts": [
         "1\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e What\u00a0Is\u00a0a\u00a0Red\u00a0Flag?\n\uf06e A\u00a0Red\u00a0Flag\u00a0is\u00a0a\u00a0visual\u00a0sign\u00a0or\u00a0indication\u00a0of\u00a0a\u00a0defect\u00a0in\u00a0a\u00a0\nstructure\u00a0or\u00a0property.\u00a0\u00a0Examples\u00a0of\u00a0Red\u00a0Flags\u00a0are:\n\uf06e cracks\u00a0in\u00a0exterior\u00a0and\u00a0interior\u00a0walls\n\uf06e vertical\u00a0and\u00a0horizontal\u00a0cracks\u00a0in\u00a0a\u00a0foundation\n\uf06e sloping\u00a0and\u00a0sagging\u00a0floors\n\uf06e doors\u00a0that\u00a0leak,\u00a0stick,\u00a0or\u00a0do\u00a0not\u00a0close\u00a0properly\n\uf06e doors\u00a0that\u00a0have\u00a0been\u00a0shaved\u00a0and\u00a0are\u00a0not\u00a0a\u00a0complete\u00a0\nrectangle\u00a0\n\uf06e windows\u00a0that\u00a0leak,\u00a0stick,\u00a0or\u00a0do\u00a0not\u00a0close\u00a0properly\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e What\u00a0Is\u00a0a\u00a0Red\u00a0Flag?\n\uf06e A\u00a0Red\u00a0Flag\u00a0is\u00a0a\u00a0visual\u00a0sign\u00a0or\u00a0indication\u00a0of\u00a0a\u00a0defect\u00a0in\u00a0a\u00a0\nstructure\u00a0or\u00a0property.\u00a0Examples\u00a0of\u00a0Red\u00a0Flags\u00a0are:\n\uf06e plumbing\u00a0fixtures\u00a0that\u00a0do\u00a0not\u00a0function\u00a0as\u00a0intended\n\uf06e mechanical\u00a0equipment\u00a0that\u00a0does\u00a0not\u00a0function\u00a0as\u00a0intended\n\uf06e buckled\u00a0or\u00a0slanted\u00a0retaining\u00a0walls"
       ],
-      "response": "Signs of a defect in a property's foundation include open cracks wider than the lead in a number 2 pencil, vertical slippage (where one side of the crack has moved down), and horizontal cracks accompanied by severe vertical cracking. Additionally, vertical and diagonal cracks are more serious, while \"corner pops\" may indicate non-structural issues.",
+      "response": "Signs of a defect in a property's foundation include open cracks wider than the lead in a number 2 pencil, vertical slippage (where one side of the crack has moved down), and horizontal cracks, especially if accompanied by severe vertical cracking. Additionally, the presence of \"corner pops\" may indicate a non-structural issue, while other cracks could signify either severe problems or normal random cracking.",
       "reference": "Examples of Red Flags in a property's foundation include vertical and horizontal cracks.",
       "context_precision": 0.5833333333041666,
       "context_recall": 1.0,
       "faithfulness": 1.0,
       "answer_relevancy": 0.9877076029013984,
-      "answer_correctness": 0.5611729755357412
+      "answer_correctness": 0.5609266916047042
     },
     {
       "user_input": "Wht are the fire and explozion hazrds that a property inspector shuld be awar of during an inspection?",
@@ -56,13 +57,13 @@
       "reference_contexts": [
         "2\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e What\u00a0Is\u00a0a\u00a0Safety\u00a0Hazard?\n\uf06e A\u00a0safety\u00a0hazard\u00a0is\u00a0anything\u00a0that\u00a0could\u00a0cause\u00a0an\u00a0injury.\u00a0\u00a0\nPersonal\u00a0injury\u00a0caused\u00a0by\u00a0a\u00a0safety\u00a0hazard\u00a0(such\u00a0as\u00a0a\u00a0cut\u00a0or\u00a0\nfracture)\u00a0is\u00a0usually\u00a0obvious.\u00a0\u00a0A\u00a0house\u00a0needs\u00a0to\u00a0be\u00a0as\u00a0safe\u00a0as\u00a0\npossible\u00a0to\u00a0prevent\u00a0injuries.\n\uf06e Some\u00a0examples\u00a0of\u00a0safety\u00a0hazards\u00a0include:\n\uf06e Slipping/tripping\u00a0hazards\u00a0(such\u00a0as\u00a0electrical\u00a0cords\u00a0across\u00a0\nfloors\u00a0or\u00a0constantly\u00a0wet\u00a0floors)\n\uf06e Exposed\u00a0(bare)\u00a0electrical\u00a0wires,\u00a0conduit\u00a0pulled\u00a0apart\u00a0or\u00a0\nhanging\u00a0loosely\n\uf06e Fire\u00a0and\u00a0explosion\u00a0hazards\u00a0(excessive\u00a0amounts\u00a0of\u00a0gasoline\u00a0in\u00a0\na\u00a0detached\u00a0or\u00a0attached\u00a0garage)\u00a0\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e What\u00a0Is\u00a0a\u00a0Safety\u00a0Hazard?\n\uf06e Some\u00a0examples\u00a0of\u00a0safety\u00a0hazards\u00a0include:\n\uf06e Pressure\u00a0systems\u00a0(such\u00a0as\u00a0old\u00a0steam\u00a0boilers,\u00a0radiators,\u00a0and\u00a0\npipes)\u00a0\n\uf06e Any\u00a0item\u00a0or\u00a0material\u00a0not\u00a0properly\u00a0attached\u00a0to\u00a0a\u00a0surface\u00a0that\u00a0\ncan\u00a0fall\u00a0from\u00a0a\u00a0height,\u00a0shift,\u00a0or\u00a0roll\u00a0from\u00a0its\u00a0original\u00a0location\u00a0\nand\u00a0cause\u00a0bodily\u00a0harm\u00a0or\u00a0death"
       ],
-      "response": "A property inspector should be aware of excessive amounts of gasoline in a garage and any combustible materials within 12 inches of the firebox as potential fire and explosion hazards.",
+      "response": "A property inspector should be aware of excessive amounts of gasoline in garages and any combustible materials within 12 inches of the firebox during an inspection.",
       "reference": "Fire and explosion hazards include excessive amounts of gasoline in a detached or attached garage, which can pose significant risks during property inspections.",
       "context_precision": 0.49999999995,
       "context_recall": 1.0,
-      "faithfulness": 0.75,
-      "answer_relevancy": 0.9547641021740471,
-      "answer_correctness": 0.7810238649893206
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.9090496065401698,
+      "answer_correctness": 0.7320251309895501
     },
     {
       "user_input": "Why very young structures can be a problem for property inspectors?",
@@ -75,13 +76,13 @@
       "reference_contexts": [
         "3\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Why\u00a0are\u00a0Red\u00a0Flags\u00a0Present\u00a0in\u00a0a\u00a0House?\n\uf06e Movement of a house is usually differential in nature.\n\uf06e Most property defects develop over a period of years; the age of\nthe structure should be kept in mind during the inspection\nprocess.\n\uf06e Older structures (10 years or older) will show much more\nevidence of problems if problems exist, especially if\nmaintenance has been neglected.\n\uf06e Very\u00a0young\u00a0structures\u00a0(new\u00a0to\u00a03\u00a0years\u00a0old)\u00a0pose\u00a0a\u00a0special\u00a0\nproblem.\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Why\u00a0are\u00a0Red\u00a0Flags\u00a0Present\u00a0in\u00a0a\u00a0House?\n\uf06e Serious\u00a0problems\u00a0may\u00a0be\u00a0undetectable\u00a0while\u00a0a\u00a0house\u00a0is\u00a0still\u00a0\nyoung.\u00a0\n\uf06e If\u00a0symptoms\u00a0of\u00a0distress\u00a0are\u00a0seen\u00a0in\u00a0a\u00a0new\u00a0house,\u00a0it\u00a0is\u00a0a\u00a0sign\u00a0of\u00a0a\u00a0\npossible\u00a0severe\u00a0and\u00a0fast\u2010moving\u00a0defects.\n\uf06e Rule\u2010of\u2010thumb:\u00a0Red\u00a0Flags\u00a0are\u00a0much\u00a0more\u00a0worrisome\u00a0if\u00a0found\u00a0in\u00a0\na\u00a0new\u00a0house\u00a0and\u00a0a\u00a0lack\u00a0of\u00a0Red\u00a0Flags\u00a0is\u00a0much\u00a0more\u00a0impressive\u00a0in\u00a0\nan\u00a0old\u00a0house."
       ],
-      "response": "Very young structures (new to 3 years old) can pose a problem for property inspectors because serious problems may be undetectable while the house is still young, and if symptoms of distress are observed, it may indicate possible severe and fast-moving defects.",
+      "response": "Very young structures (new to 3 years old) can pose a special problem because serious defects may be undetectable at that age, and if symptoms of distress are observed, it may indicate possible severe and fast-moving issues.",
       "reference": "Very young structures, which are new to 3 years old, pose a special problem because serious problems may be undetectable while a house is still young. If symptoms of distress are seen in a new house, it is a sign of a possible severe and fast-moving defects.",
       "context_precision": 0.99999999995,
       "context_recall": 1.0,
       "faithfulness": 1.0,
       "answer_relevancy": 0.0,
-      "answer_correctness": 0.9918233832831205
+      "answer_correctness": 0.9062381114492197
     },
     {
       "user_input": "Wot r the common reasons smoke detektors may not werk and how can u test them properly?",
@@ -100,8 +101,8 @@
       "context_precision": 0.8333333332916666,
       "context_recall": 1.0,
       "faithfulness": 1.0,
-      "answer_relevancy": 0.9559474125329027,
-      "answer_correctness": 0.5674006296787939
+      "answer_relevancy": 0.9559334220517233,
+      "answer_correctness": 0.9959720582502225
     },
     {
       "user_input": "What are the common causes of wall cracks in houses, and how can they be concealed by homeowners during property inspections?",
@@ -115,13 +116,13 @@
         "<1-hop>\n\n21\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Wall\u00a0Cracks:\u00a0\n\uf06e However, often they inadvertently conceal or hide defects.\n\uf06e The following are usually concealed by the owners: wall cracks,\ntorn and/or puckered drywall tape, wall water stains, sticking\ndoors and windows.\n\uf06e Therefore, you should make an effort to identify any possible\ndefects.\n\uf06e Often a patched wall area will have a different surface texture\nfrom the rest of the wall.\n\uf06e The color of the paint may also be slightly different.\n\uf06e Sometimes wallpaper is used to redecorate walls, so cracks can\nbe concealed.\n\uf06e Some of the time the cracks can be felt with the fingertips.\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Sloping Floors:\n\uf06e In a typical house, floors are sufficiently level and any\nsloping can be determined only by precise measuring.\n\uf06e Do floors feel springy? A very springy floor indicates a\npossible problem with the interior floor structure.\n\uf06e You should look for cracks in all tile and marble floors.\n\uf06e A continuous vertical crack that covers 3 sections of\nmarble or tile in the floor is always a Red Flag .",
         "<2-hop>\n\n20\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Wall\u00a0Cracks:\n\uf06e Cracks develop in the walls of houses for a number of\nreasons.\n\uf06e Wooden framing of the house may dry out and shrink\nshortly after the house is built.\n\uf06e Almost every house has a few hairline cracks caused by\nshrinkage of wood.\n\uf06e However, differential movement of the structure may occur,\ncaused by foundation movement or structural defects that\ncan cause significant wall cracking.\n\uf06e When inspecting for cracking, pay particular attention to\ncommon crack locations such as the corners of windows,\ndoors and the walls of rooms.\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Wall\u00a0Cracks:\n\uf06e Consciously look for crac ks behind curtains and on\nceilings throughout the house and make written notes\nof the amount and severity of any cracking observed.\n\uf06e A significant amount of diagonal cracking, large\ncracks, or spaces associated with other indications such\nas sloping floors or sticking windows or doors are a\nconcern.\n\uf06e Homeowners commonly paint and patch homes for\naesthetic reasons prior to selling them."
       ],
-      "response": "Common causes of wall cracks in houses include drying and shrinking of wooden framing, differential movement due to foundation movement, and structural defects. Homeowners may conceal these cracks during property inspections by using wallpaper, patching areas with different surface textures, or painting over them, which can result in color discrepancies.",
+      "response": "Common causes of wall cracks in houses include drying and shrinking of wooden framing, differential movement due to foundation movement, and structural defects. Homeowners may conceal these cracks during property inspections by patching them, using wallpaper, or painting over them, which can result in different surface textures or colors.",
       "reference": "Wall cracks in houses can develop for several reasons, including the drying and shrinking of wooden framing shortly after construction, as well as differential movement of the structure due to foundation movement or structural defects. Homeowners often conceal these cracks by patching them, which may result in a different surface texture or color compared to the rest of the wall. Additionally, wallpaper may be used to redecorate walls, further hiding the cracks. During property inspections, it is crucial to look for cracks in common locations such as the corners of windows and doors, and to check behind curtains and on ceilings, making written notes of the amount and severity of any cracking observed.",
-      "context_precision": 0.999999999975,
+      "context_precision": 0.9999999999666667,
       "context_recall": 1.0,
       "faithfulness": 1.0,
       "answer_relevancy": 0.9800923412931816,
-      "answer_correctness": 0.8254292392977581
+      "answer_correctness": 0.7947485734122007
     },
     {
       "user_input": "What are the signs of problems with retaining walls and how do they relate to hillside stability?",
@@ -141,7 +142,7 @@
       "context_recall": 0.6666666666666666,
       "faithfulness": 1.0,
       "answer_relevancy": 0.9856164921084455,
-      "answer_correctness": 0.5874676335007929
+      "answer_correctness": 0.35669840273156217
     },
     {
       "user_input": "What are the key requirements for building ventilation in properties, and how does proper drainage relate to hillside stability?",
@@ -181,7 +182,7 @@
       "context_recall": 1.0,
       "faithfulness": 1.0,
       "answer_relevancy": 0.9472850157043714,
-      "answer_correctness": 0.8305782993622137
+      "answer_correctness": 0.7042625098885293
     },
     {
       "user_input": "What are the risks associated with hazardous materials in properties, and how does safety glass play a role in ensuring safety during inspections?",
@@ -195,13 +196,13 @@
         "<1-hop>\n\n36\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Hazardous Materials:\n\uf06e Toxic Waste:\n\uf06e Some toxic wastes can be highly toxic and long \u2010lived.\n\uf06e These toxic substances can pollute water supplies that serve\nan entire community, pollute the ground a community is\nbuilt on, or even contaminate food if it is grown on polluted\nsoils or irrigated with polluted water.\n\uf06e Water quality has become a significant public safety issue.\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Hazardous Materials:\n\uf06e Toxic Waste:\n\uf06e Water well pollution from industrial sources, soil pollution\nin toxic dumps near or over which housing developments\nhave been constructed (as in Love Canal, NY), and\ncontamination of communities by floods carrying toxic\nrunoff (as in Times Beach, FL) continually reemphasize the\nneed for communities to take precautions against pollution.",
         "<2-hop>\n\n29\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Glass:\n\uf06e The words safety glass or tempered glass with a monogram\nis etched on all panes of safety glass.\n\uf06e In today\u2019s world it is not always easy to see these\netchings. If you cannot make sure, refer this to a glass\nprofessional for verification.\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Smoke Detectors:\n\uf06e The U.S. is a world leader in death from house fires.\n\uf06e Smoke detectors can reduce the risk of someone dying in a\nhouse fire by at least 50%.\n\uf06e This is true only if the smoke detectors are in working order.\n\uf06e An estimated one of every four houses are equipped with smoke\ndetectors that do not work properly.\n\uf06e Types of Smoke Detectors:\n\uf06e Ionization\n\uf06e Photoelectric"
       ],
-      "response": "Hazardous materials can adversely affect property values and pose health risks, as improper disposal can lead to land and water contamination. There are four classifications of hazardous materials: Corrosive, Toxic, Reactive, and Ignitable. Safety glass, identified by etchings, is important in inspections to prevent injuries from breakage, contributing to overall safety in properties.",
+      "response": "Hazardous materials can adversely affect property values and pose health risks, as improper disposal can lead to land and water contamination. There are four classifications of hazardous materials: Corrosive, Toxic, Reactive, and Ignitable. Safety glass, identified by etchings indicating it is tempered, helps prevent injuries during inspections by reducing the risk of shattering and associated cuts.",
       "reference": "The risks associated with hazardous materials in properties include the potential for toxic waste to pollute water supplies, contaminate soil, and affect food grown in polluted areas. This pollution can pose significant public safety issues for entire communities. On the other hand, safety glass, which is marked with etchings indicating it is tempered, is crucial during property inspections to ensure that the glass used in buildings meets safety standards. If the etchings are not visible, it is recommended to consult a glass professional for verification, thereby enhancing safety in properties.",
       "context_precision": 0.99999999995,
       "context_recall": 1.0,
-      "faithfulness": 0.625,
+      "faithfulness": 0.6,
       "answer_relevancy": 0.8865770864511088,
-      "answer_correctness": 0.703234373626854
+      "answer_correctness": 0.5649339145227876
     },
     {
       "user_input": "What are the red flags to look for during a property inspection that may indicate the presence of hazardous materials?",
@@ -215,13 +216,13 @@
         "<1-hop>\n\n23\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Sticking Doors and Windows:\n\uf06e There are two things to look for when inspecting doors\nand windows:\n\uf06e 1. sticking when you open or close them\n\uf06e 2. uneven spaces between doors and their frames\n\uf06e These two symptoms usually mean movement of the walls\nand floors have changed the shape of the window or\ndoorframe.\n\uf06e Always open and close every door and window in the\nhouse.\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Sticking Doors and Windows:\n\uf06e When you are inspecting a door, look at the spaces at the\ntop and bottom.\n\uf06e The door should resemble a long, narrow rectangle.\n\uf06e Always look for signs that the door has been sawed or\nsanded to make it fit the crooked frame.",
         "<2-hop>\n\n32\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Hazardous Materials:\n\uf06e Hazardous materials are a problem that can adversely and/or\ndramatically affect property values.\n\uf06e Every state has passed disclosure laws that instituted stricter\nstorage and cleanup regulations for toxic waste.\n\uf06e All of us need to understand that there are hundreds of\n\u02bahazardous materials\u02ba in our houses.\n\uf06e Some homeowners will unknowingly dump these harmful\nproducts onto their property.\n\uf06e When these hazardous materials are dumped onto our land\ninstead of being disposed of properly, they eventually create\nproblems with the land and then create problems in our water\nsystems.\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Hazardous Materials:\n\uf06e There are four major classifications of hazardous\nmaterials: Corrosive, Toxic, Reactive, and Ignitable.\n\uf06e A corrosive material will slowly dissolve or wear away\ngradually.\n\uf06e Corrosive material is a chemical compound that is safely\ncontained in one type of container, usually metal, but if it is\nplaced in a different type of co ntainer it will eat through or\ndissolve that container.\n\uf06e A toxic material almost always has a poison identification on\nthe bottle usually accompanied with the skull and\ncrossbones symbol."
       ],
-      "response": "Red flags to look for during a property inspection that may indicate the presence of hazardous materials include:\n\n1. Oil spots on the ground or dark brown to black areas where vegetation does not grow.\n2. Holes in garage floors designed for fluid drainage.\n3. Extensive paint or chemical storage facilities.\n4. Evidence of mechanical or fabrication work at the location.\n5. Underground storage tanks, which can lead to expensive cleanup issues.",
+      "response": "Red flags to look for during a property inspection that may indicate the presence of hazardous materials include:\n\n1. Oil spots on the ground or dark brown to black areas where vegetation does not grow.\n2. Holes in garage floors designed for fluid drainage (sumps).\n3. Evidence of extensive paint or chemical storage facilities.\n4. Indications of mechanical or fabrication work at the location.\n5. Improperly disposed toxic wastes, such as tanks that may need removal.",
       "reference": "During a property inspection, red flags to look for include sticking doors and windows, which may indicate movement of walls and floors. This structural movement can be a sign of underlying issues, including the potential presence of hazardous materials. Hazardous materials can adversely affect property values and may be improperly stored or disposed of, leading to contamination of the land and water systems.",
       "context_precision": 0.49999999995,
       "context_recall": 0.3333333333333333,
       "faithfulness": 1.0,
       "answer_relevancy": 0.9960584635710171,
-      "answer_correctness": 0.22470737522300313
+      "answer_correctness": 0.22518918329571996
     },
     {
       "user_input": "In the context of property inspections, how do the maintenance requirements for smoke detectors relate to the identification of structural issues such as sagging beams?",
@@ -235,13 +236,13 @@
         "<1-hop>\n\n31\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Smoke Detectors:\n\uf06e Replacement of Batteries in Smoke Detectors\n\uf06e The batteries in a smoke detector should be changed no less\nthan once a year.\n\uf06e The best way to remember this is to change your batteries\nwhen you set your clocks forward or back.\n\uf06e Expected Life of a Smoke Detector\n\uf06e All smoke detectors that are 10 years old or older should be\nreplaced!\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Smoke Detectors:\n\uf06e Expected Life of a Smoke Detector\n\uf06e These units have gone through millions of testing cycles checking\nthe immediate surroundings for smoke.\n\uf06e Even a smoke detector powered with household current and with a\nbattery back\u2010up needs to be replaced after 10 years.",
         "<2-hop>\n\n26\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Sagging\u00a0Beams:\n\uf06e If portions of a building are improperly sized, the wrong\nbuilding materials are used, or proper construction\nmethods are not followed, distress to a house can occur.\n\uf06e Sagging beams are obvious during a visual inspection.\n\uf06e Sagging beams can be easily detected especially if they\na r es om u c hl o w e ri nt h em i d d l et h a tt h eu n e v e n n e s sc a n\nbe seen with the naked eye.\n\uf06e In milder cases, there may be cracks where the beam\nconnects to the framing of the house.\nRed\u00a0Flags\u00a0Property\u00a0Inspection\u00a0\u00a0\nGuide\n\uf06e Major\u00a0Mechanical\u00a0Systems:\n\uf06e Electrical System:\n\uf06e Check for loose, damaged, and/or malfunctioning\nreceptacles and wall switches.\n\uf06e L o o kf o rb u r no rs c o r c hm a r k s .\n\uf06e Extension cords underneath carpets or stapled along\nbaseboards are hazardous and illegal."
       ],
-      "response": "The maintenance requirements for smoke detectors, such as changing batteries annually and replacing units every 10 years, ensure safety and functionality, while the identification of structural issues like sagging beams involves visual inspections for physical distress. Both are critical aspects of property inspections, but they address different safety concerns: smoke detectors focus on fire safety, whereas sagging beams indicate potential structural integrity problems.",
+      "response": "The maintenance requirements for smoke detectors, such as changing batteries annually and replacing units every 10 years, ensure safety and functionality, while the identification of structural issues like sagging beams involves visual inspections for signs of distress. Both are critical aspects of property inspections, but they address different safety concerns: smoke detectors focus on fire safety, whereas sagging beams indicate potential structural integrity problems.",
       "reference": "The maintenance requirements for smoke detectors emphasize the importance of replacing batteries annually and replacing the units themselves after 10 years to ensure safety. This is crucial in a property inspection context, as functioning smoke detectors are essential for detecting fires that could arise from structural issues. On the other hand, sagging beams indicate potential distress in a building, often due to improper sizing, materials, or construction methods. During a property inspection, both the functionality of smoke detectors and the structural integrity indicated by sagging beams are critical for assessing the overall safety and stability of the property.",
       "context_precision": 0.3333333333,
       "context_recall": 1.0,
-      "faithfulness": 0.75,
+      "faithfulness": 0.625,
       "answer_relevancy": 0.958784777908472,
-      "answer_correctness": 0.995384197936072
+      "answer_correctness": 0.9954433087083626
     }
   ]
 }

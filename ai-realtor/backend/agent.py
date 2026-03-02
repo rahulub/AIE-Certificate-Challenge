@@ -116,3 +116,43 @@ async def run_agent(message: str, context: str = "", history: list[dict] | None 
     ):
         if isinstance(chunk, AIMessage) and chunk.content:
             yield chunk.content
+
+
+async def run_agent_for_eval(
+    message: str, context: str = "", tools: list | None = None
+) -> tuple[str, list[str]]:
+    """
+    Runs the agent and returns (final_response, tool_outputs) for RAGAS evaluation.
+    Uses get_tools_for_eval() by default (search_red_flag_guidelines, search_inspection_report, web_search).
+    """
+    from langchain_core.messages import ToolMessage
+
+    from tools import get_tools_for_eval
+
+    agent_tools = tools if tools is not None else get_tools_for_eval()
+    model = ChatOpenAI(
+        model=os.getenv("LLM_MODEL", "gpt-4o-mini"),
+        api_key=os.getenv("OPENAI_API_KEY"),
+        temperature=0,
+    )
+    agent = create_react_agent(model, agent_tools, prompt=SYSTEM_PROMPT)
+
+    user_content = f"[User-provided context:\n{context}\n\n]{message}" if context else message
+    inputs = {"messages": [HumanMessage(content=user_content)]}
+
+    result = await agent.ainvoke(inputs)
+    messages = result.get("messages", [])
+
+    tool_outputs = []
+    for msg in messages:
+        if isinstance(msg, ToolMessage) and msg.content:
+            tool_outputs.append(msg.content)
+
+    # Final response is the last AIMessage with content (after all tool calls)
+    final_response = ""
+    for msg in reversed(messages):
+        if isinstance(msg, AIMessage) and msg.content:
+            final_response = msg.content
+            break
+
+    return final_response, tool_outputs

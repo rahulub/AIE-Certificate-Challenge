@@ -1,6 +1,21 @@
 # AI Realtor
 
-A streaming AI chat application for home inspection analysis with a React frontend and FastAPI backend.
+A streaming AI chat application for home inspection analysis with a Next.js frontend and FastAPI backend.
+
+## Architecture
+
+![AI Realtor Architecture](./assets/ai-realtor-architecture.png)
+
+| Layer | Components |
+|-------|------------|
+| **Frontend** | Next.js app: ChatPanel, PDF upload; proxies `/api/chat` to backend |
+| **Backend** | FastAPI: `/api/chat` (SSE streaming), `/api/ingest` (user PDFs), `/api/ingest/local` (reference docs) |
+| **Agent** | LangGraph ReAct agent (GPT-4o-mini) with tools for RAG + web search |
+| **Tools** | `search_red_flag_guidelines`, `search_inspection_report`; optional Cohere-reranked variants; `web_search` (Tavily) |
+| **RAG** | PDF → Chunker → Embedder (OpenAI) → Qdrant; collections: `reference_guidelines`, `user_reports` |
+| **Persistence** | Redis (chat history per `thread_id`); Qdrant (vector store) |
+| **External** | OpenAI (LLM + embeddings), Qdrant, Redis, Cohere (optional), Tavily |
+| **Eval** | RAGAS pipeline: `ragas_testset.json` → `evaluate.py` → `eval_results.json` |
 
 ## Project Structure
 
