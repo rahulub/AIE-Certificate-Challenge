@@ -167,15 +167,13 @@ export function InspectionForm({ onSubmit, isLoading }: InspectionFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!address.trim() || !ingestedFilename || priorities.length === 0)
-      return
+    if (!address.trim() || !ingestedFilename) return
     onSubmit({ address, filename: ingestedFilename, priorities })
   }
 
   const isValid =
     address.trim() !== "" &&
-    ingestedFilename !== "" &&
-    priorities.length > 0
+    ingestedFilename !== ""
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-8">
@@ -308,7 +306,7 @@ export function InspectionForm({ onSubmit, isLoading }: InspectionFormProps) {
           </span>
         </div>
         <p className="text-xs text-muted-foreground -mt-1">
-          Select what matters most to you — analysis will prioritize these areas.
+          Optional: Select what matters most — analysis will prioritize these areas. Skip to report all red flags from the inspection.
         </p>
 
         {/* Selected priorities */}

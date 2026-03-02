@@ -20,7 +20,8 @@ async def search_red_flag_guidelines(query: str, top_k: int = 5) -> str:
 async def search_inspection_report(query: str, top_k: int = 5) -> str:
     """Searches the user's uploaded inspection report for property/structure issues.
     Use ONLY for: foundation, roof, plumbing, electrical, HVAC, structure, water damage, mold, etc.
-    Does NOT contain: schools, neighborhood, walkability, safety/crime, amenities — use web_search for those."""
+    NEVER use for: schools, neighborhood, area, walkability, safety/crime, amenities, location — use web_search for those instead.
+    The inspection report does NOT contain neighborhood or area information."""
     return await retrieve_from_report(query, top_k)
 
 
@@ -35,7 +36,8 @@ async def search_red_flag_guidelines_advanced(query: str, top_k: int = 5) -> str
 @tool
 async def search_inspection_report_advanced(query: str, top_k: int = 5) -> str:
     """Searches the user's inspection report with Cohere reranking for higher-precision results.
-    Use when standard search_inspection_report returns too many irrelevant results."""
+    Use when standard search_inspection_report returns too many irrelevant results.
+    NEVER use for neighborhood, schools, area, amenities — use web_search for those."""
     from rag.retriever_cohere import retrieve_from_report_cohere
     return await retrieve_from_report_cohere(query, top_k)
 
@@ -43,9 +45,9 @@ async def search_inspection_report_advanced(query: str, top_k: int = 5) -> str:
 @tool
 async def web_search(query: str, max_results: int = 5) -> str:
     """Searches the web for information NOT in the inspection report.
-    For schools: search for property address + 'schools' and 'school ratings' to get elementary, middle,
-    high school names and ratings (e.g. GreatSchools, Niche). Include address in query.
-    Also use for: neighborhood, walkability, safety, amenities, repair costs, building codes."""
+    Use for ANY school-related question (school details, school info, schools, ratings). Search with property address + 'schools' and 'school ratings'.
+    Also use for: neighborhood, walkability, safety, amenities, repair costs, building codes.
+    The inspection report does NOT contain school information."""
     return await search_web(query, max_results)
 
 

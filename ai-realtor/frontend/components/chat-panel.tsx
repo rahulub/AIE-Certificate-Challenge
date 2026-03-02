@@ -62,11 +62,11 @@ export function ChatPanel({ context, onReset }: ChatPanelProps) {
   )
   const hasSchoolPref = priorities.some((p) => /school/i.test(p))
   const schoolInstruction = hasSchoolPref
-    ? ` For School Quality: call web_search with "${context.address} schools" and "${context.address} school ratings" to get elementary, middle, and high school details with ratings. Present: school name, grade levels, and rating for each.`
+    ? ` When the user asks about schools: call web_search with "${context.address} schools" and "${context.address} school ratings" to get elementary, middle, and high school details with ratings.`
     : ""
   const webSearchReminder =
     neighborhoodPrefs.length > 0
-      ? `\n\n⚠️ MANDATORY: User selected: ${neighborhoodPrefs.join(", ")}. You MUST call web_search — inspection report has NONE of this. Include address "${context.address}" in queries.${schoolInstruction}`
+      ? `\n\nUser selected: ${neighborhoodPrefs.join(", ")}. When the user's CURRENT question asks about these topics, call web_search (include address "${context.address}"). Do NOT include this info when the question is about inspection findings, repair costs, or property structure.${schoolInstruction}`
       : ""
 
   const hasSpecificCategories = priorities.some(
@@ -87,8 +87,8 @@ export function ChatPanel({ context, onReset }: ChatPanelProps) {
     "structural issues, roof, foundation, electrical, plumbing, HVAC, water damage, mold, safety hazards. " +
     "For each red flag: 1) Issue description, 2) Severity (🔴 Critical / 🟠 Major / 🟡 Minor), 3) Page number. " +
     "Always ORDER red flags by decreasing severity: Critical first, then Major, then Minor. " +
-    "ALWAYS include findings relevant to the user's custom preferences in your answer. " +
-    "Tailor your analysis to the user's stated preferences." +
+    "Include findings relevant to the user's preferences when giving a comprehensive summary. " +
+    "For focused follow-up questions, answer ONLY what was asked — do not add other preference topics." +
     reportAllRedFlags +
     webSearchReminder
 
