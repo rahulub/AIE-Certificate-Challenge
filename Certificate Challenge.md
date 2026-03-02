@@ -394,6 +394,12 @@ Reasons:
 Please include the following in your final submission:
 
 1. A public (or otherwise shared) link to a **GitHub repo** that contains:
+
+**Repo**  https://github.com/rahulub/AIE-Certificate-Challenge
+
 - A 5-minute (OR LESS) Loom video of a live **demo of your application** that also describes the use case.
+
+**Loom Video** https://www.loom.com/share/abd549a800d744a6bd780bc12130bcee
+
 - A **written document** addressing each deliverable and answering each question
 - All relevant code
