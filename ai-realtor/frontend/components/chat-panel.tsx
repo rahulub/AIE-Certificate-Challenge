@@ -56,18 +56,14 @@ export function ChatPanel({ context, onReset }: ChatPanelProps) {
   threadIdRef.current = threadId
 
   const priorities = Array.isArray(context.priorities) ? context.priorities : []
-  const prioritiesList = priorities.length > 0 ? priorities.join(", ") : "General property condition"
   const neighborhoodPrefs = priorities.filter((p) =>
     /school|peaceful|walkability|safety|amenities|neighborhood|crime|park|grocery|transit|commute|location|area|community/i.test(p)
   )
+  const inspectionPrefs = priorities.filter((p) => !neighborhoodPrefs.includes(p))
   const hasSchoolPref = priorities.some((p) => /school/i.test(p))
   const schoolInstruction = hasSchoolPref
-    ? ` When the user asks about schools: call web_search with "${context.address} schools" and "${context.address} school ratings" to get elementary, middle, and high school details with ratings.`
+    ? ` For School Quality: call web_search with "${context.address} schools" and "${context.address} school ratings" to get elementary, middle, and high school names and ratings.`
     : ""
-  const webSearchReminder =
-    neighborhoodPrefs.length > 0
-      ? `\n\nUser selected: ${neighborhoodPrefs.join(", ")}. When the user's CURRENT question asks about these topics, call web_search (include address "${context.address}"). Do NOT include this info when the question is about inspection findings, repair costs, or property structure.${schoolInstruction}`
-      : ""
 
   const hasSpecificCategories = priorities.some(
     (p) =>
@@ -80,17 +76,37 @@ export function ChatPanel({ context, onReset }: ChatPanelProps) {
       ? "\n\nWhen no specific inspection categories are selected, report ALL red flags found in the inspection report."
       : ""
 
-  const contextStr =
-    `Property Address: ${context.address}\n` +
-    `User preferences while buying this property: ${prioritiesList}\n` +
-    `Inspection report "${context.filename}" has been indexed. Search for and identify red flags across: ` +
-    "structural issues, roof, foundation, electrical, plumbing, HVAC, water damage, mold, safety hazards. " +
-    "For each red flag: 1) Issue description, 2) Severity (🔴 Critical / 🟠 Major / 🟡 Minor), 3) Page number. " +
-    "Always ORDER red flags by decreasing severity: Critical first, then Major, then Minor. " +
-    "Include findings relevant to the user's preferences when giving a comprehensive summary. " +
-    "For focused follow-up questions, answer ONLY what was asked — do not add other preference topics." +
-    reportAllRedFlags +
-    webSearchReminder
+  const buildContextStr = (isFollowUp: boolean) => {
+    const prioritiesList =
+      isFollowUp && inspectionPrefs.length > 0
+        ? inspectionPrefs.join(", ")
+        : priorities.length > 0
+          ? priorities.join(", ")
+          : "General property condition"
+
+    const webSearchReminder =
+      !isFollowUp &&
+      neighborhoodPrefs.length > 0
+        ? `\n\nUser selected: ${neighborhoodPrefs.join(", ")}.
+INITIAL assessment ONLY: call web_search (include address "${context.address}") and add a School/Neighborhood section.${schoolInstruction}
+The inspection report does NOT contain school or neighborhood data — use web_search.`
+        : ""
+
+    return (
+      `Property Address: ${context.address}\n` +
+      `User preferences while buying this property: ${prioritiesList}\n` +
+      `Inspection report "${context.filename}" has been indexed. Search for and identify red flags across: ` +
+      "structural issues, roof, foundation, electrical, plumbing, HVAC, water damage, mold, safety hazards. " +
+      "For each red flag: 1) Issue description, 2) Severity (🔴 Critical / 🟠 Major / 🟡 Minor), 3) Page number. " +
+      "Always ORDER red flags by decreasing severity: Critical first, then Major, then Minor. " +
+      (isFollowUp
+        ? "Answer ONLY what was asked. Do NOT add school or neighborhood info unless the question explicitly asks about it."
+        : "Include findings relevant to the user's preferences when giving a comprehensive summary. " +
+          "For focused follow-up questions, answer ONLY what was asked — do not add other preference topics.") +
+      reportAllRedFlags +
+      webSearchReminder
+    )
+  }
 
   const sendMessage = useCallback(
     async (text: string) => {
@@ -110,9 +126,10 @@ export function ChatPanel({ context, onReset }: ChatPanelProps) {
       setError(null)
 
       try {
+        const isFollowUp = !!threadIdRef.current
         const body: { message: string; context?: string; thread_id?: string } = {
           message: text.trim(),
-          context: contextStr,
+          context: buildContextStr(isFollowUp),
         }
         const tid = threadIdRef.current
         if (tid) body.thread_id = tid
@@ -169,7 +186,7 @@ export function ChatPanel({ context, onReset }: ChatPanelProps) {
         setIsStreaming(false)
       }
     },
-    [contextStr]
+    [context, buildContextStr]
   )
 
   const handleSubmit = (e?: React.FormEvent) => {

@@ -1,7 +1,6 @@
 # Backend
 backend/.env
 backend/.env.local
-backend/data/*.pdf
 backend/**/__pycache__/
 backend/**/*.pyc
 backend/.venv/

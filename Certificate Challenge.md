@@ -16,13 +16,16 @@ Buyers must act quickly while juggling many property decisions and a large amoun
 3. Create a list of questions or input-output pairs that you can use to evaluate your application
 
 Q: Find out the red flags in propery inspection report
+
 A: Here are red flags from the inspection report, in order of Critical, Major and Minor
 
 Q. List schools and their rating
+
 A. School Quality for 1455 Bittern Dr, Sunnyvale, CA <list of schoold and their ratings>
 
 
 Q. How is neighborhood 
+
 A. The neighborhood is described as charming and well-located, with close proximity to local amenities, schools, and commuter routes. It is situated near Apple Park, which is a significant landmark in the area, indicating a desirable location.
 
 ### Task 2: Articulate your proposed solution
@@ -184,14 +187,14 @@ Inspection reports are page-based, and users expect citations like “page 7.”
 **✅ Deliverables**
 
 1. Build an end-to-end prototype and deploy it to a *local* endpoint
-2. (Optional) Use locally-hosted OSS models instead of LLMs through the OpenAI API
-3. (Optional) Deploy your prototype to public endpoint using a tool like [Vercel](http://vercel.com/), [Render](https://render.com/), or [FastAPI Cloud](https://fastapicloud.com/)
+
+The "ai-realtor" directory has all the code required. In that directory there is README.md which have directory structure and steps on how to start backend and frontend.
 
 ### Task 5: Prepare a test data set (either by generating synthetic data or by assembling an existing dataset) to baseline an initial evaluation with RAGAS
 
 1. Assess your pipeline using the RAGAS framework, including the following key metrics: faithfulness, context precision, and context recall. Include any other metrics you feel are worthwhile to assess.   Provide a table of your output results.
 
-### Overall RAGAS Scores
+## Overall RAGAS Scores (eval/data/eval_results.json)
 
 | Metric | Score | Interpretation |
 |--------|-------|----------------|
@@ -201,12 +204,12 @@ Inspection reports are page-based, and users expect citations like “page 7.”
 | **Context Recall** | 0.48 | Moderate — ~48% of reference content retrieved |
 | **Faithfulness** | 0.49 | Moderate — answers are ~halfway grounded in retrieved context |
 
-### Tool Usage
+## Tool Usage
 
 - **11 of 12** samples made tool calls (`search_red_flag_guidelines`, `search_inspection_report`, `web_search`).
 - **1** sample with no tool calls: *"What does the term 'Red Flags Property' refer to?"* — answered from model knowledge.
 
-### Per-Sample Breakdown
+## Per-Sample Breakdown
 
 | # | Question Topic | Prec | Recall | Faith | Relevancy | Correctness | Notes |
 |---|----------------|------|--------|-------|-----------|-------------|-------|
@@ -229,7 +232,7 @@ Inspection reports are page-based, and users expect citations like “page 7.”
 
 ## Conclusions: Pipeline Performance and Effectiveness
 
-### 1. The Pipeline is Generally Effective
+## 1. The Pipeline is Generally Effective
 
 - **Answer relevancy (0.97)** — The agent produces relevant answers across a range of topics (foundation, smoke detectors, wall cracks, hazmat, etc.), including typos.
 - **Strong tool usage** — With the eval prompt, 11/12 (base) and 12/12 (advanced) samples use tools instead of answering from memory.
@@ -239,7 +242,7 @@ Inspection reports are page-based, and users expect citations like “page 7.”
 
 ---
 
-### 2. Retrieval is the Main Bottleneck
+## 2. Retrieval is the Main Bottleneck
 
 - **Context recall (0.48)** — Only about half of the relevant reference content is retrieved.
 - **Context precision (0.62)** — A non-trivial share of retrieved chunks is not useful.
@@ -252,7 +255,7 @@ Inspection reports are page-based, and users expect citations like “page 7.”
 
 ---
 
-### 3. Faithfulness Tracks Retrieval Quality
+## 3. Faithfulness Tracks Retrieval Quality
 
 - When retrieval is good (samples 5, 6, 9, 12): faithfulness is 0.79–1.0.
 - When retrieval is poor (samples 2, 10, 11): faithfulness drops to 0.28–0.44.
@@ -261,7 +264,7 @@ Inspection reports are page-based, and users expect citations like “page 7.”
 
 ---
 
-### 4. Answer Correctness Reflects Retrieval Plus Reference Alignment
+## 4. Answer Correctness Reflects Retrieval Plus Reference Alignment
 
 - Correctness rises when retrieval is good.
 - Advanced has slightly lower correctness (0.65 → 0.61) despite higher faithfulness.
@@ -271,7 +274,7 @@ Inspection reports are page-based, and users expect citations like “page 7.”
 
 ---
 
-### 6. The Eval-Specific Prompt Works
+## 5. The Eval-Specific Prompt Works
 
 - Before: ~8/12 samples had no tool calls.
 - After: 11/12 (base) and 12/12 (advanced) use tools.
@@ -279,7 +282,7 @@ Inspection reports are page-based, and users expect citations like “page 7.”
 
 ---
 
-### Summary
+## Summary
 
 The pipeline works when retrieval is solid. Retrieval quality (chunking and search) is the main limit, not the agent. Cohere reranking improves retrieval and grounding. Foundation and hazmat need targeted retrieval work before they can be fully trusted.
 
@@ -290,11 +293,11 @@ The pipeline works when retrieval is solid. Retrieval quality (chunking and sear
 
 ## Advanced Retriever Technique: Cohere Rerank
 
-### Two-Stage Retrieve-Then-Rerank
+## Two-Stage Retrieve-Then-Rerank
 
 The application uses **Cohere Rerank** as its advanced retrieval technique — a two-stage pipeline that combines dense vector search with cross-encoder reranking.
 
-### How It Works
+## How It Works
 
 1. **Stage 1 — Dense vector search (Qdrant)**  
    The query is embedded and used to search the vector store by cosine similarity. Retrieval is over-fetched: the pipeline pulls `candidate_factor × top_k` candidates (at least 20).
@@ -302,13 +305,13 @@ The application uses **Cohere Rerank** as its advanced retrieval technique — a
 2. **Stage 2 — Cohere reranking**  
    The candidate chunks are sent to Cohere’s rerank API (model: `rerank-english-v3.0`), which scores each query–document pair for relevance. Only the top `top_k` results are returned.
 
-### Why It Improves Retrieval
+## Why It Improves Retrieval
 
 - **Vector search alone** returns chunks with high semantic similarity, but not always the most relevant answer.
 - **Cohere rerank** uses a cross-encoder model to score query–document relevance more directly.
 - **Two-stage design** keeps cost and latency reasonable by reranking only a small candidate set instead of the full corpus.
 
-### Where It’s Used
+## Where It’s Used
 
 | Base (vector only) | Advanced (with rerank) |
 |--------------------|------------------------|
@@ -318,13 +321,13 @@ The application uses **Cohere Rerank** as its advanced retrieval technique — a
 2. Implement the advanced retrieval technique on your application.
 3. How does the performance compare to your original RAG application? Test the new retrieval pipeline using the RAGAS frameworks to quantify any improvements. Provide results in a table.
 
-## Performance Comparison: Base vs Advanced Retrieval Pipeline
+## Performance Comparison: Base vs Advanced Retrieval Pipeline(eval/data/eval_results_advanced.json)
 
 Using **eval_results_agent.json** and **eval_results_advanced.json**, RAGAS evaluation of the base (vector-only) and advanced (Cohere rerank) pipelines gives:
 
 ---
 
-### RAGAS Results
+## RAGAS Results
 
 | Metric | Base (Vector Search) | Advanced (Cohere Rerank) | Change |
 |--------|----------------------|---------------------------|--------|
@@ -336,17 +339,17 @@ Using **eval_results_agent.json** and **eval_results_advanced.json**, RAGAS eval
 
 ---
 
-### Pipeline Configuration
+## Pipeline Configuration
 
 | | Base | Advanced |
 |---|------|----------|
 | **Retrieval** | Qdrant vector search (cosine similarity) | Qdrant vector search + Cohere rerank |
 | **Tools** | `search_red_flag_guidelines`, `search_inspection_report`, `web_search` | `search_red_flag_guidelines_advanced`, `search_inspection_report_advanced`, `web_search` |
-| **Top-k** | 5 | 3 (after reranking 12+ candidates) |
+| **Top-k** | 5 | 5 (after reranking 12+ candidates) |
 
 ---
 
-### Summary
+## Summary
 
 - **Context precision** and **context recall** improve with Cohere rerank, indicating better retrieval.
 - **Faithfulness** improves (0.488 → 0.524), so answers are better grounded in context.
@@ -366,20 +369,20 @@ I will keep dense vector retrieval as the baseline, with Cohere rerank as an opt
 
 Reasons:
 
-### 1. Dense retrieval is a solid fallback
+## 1. Dense retrieval is a solid fallback
 
 - Answer relevancy is strong (0.977).
 - 11/12 eval samples use tools correctly.
 - Some samples (wall cracks, hazardous vegetation, smoke detectors) reach 0.88–0.99 correctness.
 - No external APIs beyond Qdrant and OpenAI, so simpler setup and fewer failure points.
 
-### 2. Cohere rerank improves retrieval and grounding
+## 2. Cohere rerank improves retrieval and grounding
 
 - Context precision +20%, context recall +28%.
 - Better faithfulness and answer correctness.
 - Helps on weak topics (foundation, hazmat).
 
-### 3. Current implementation already supports both
+## 3. Current implementation already supports both
 
 - `agent.py` uses `get_tools()`, which adds advanced tools only when `COHERE_API_KEY` is set.
 - If the key is set → advanced (vector + Cohere) tools are used.
