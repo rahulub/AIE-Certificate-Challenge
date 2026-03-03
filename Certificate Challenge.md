@@ -53,6 +53,9 @@ Tech stack and architecture: The frontend uses Next.js 16 with React 19, shadcn/
 
 ![AI Realtor Architecture](AI-Realtor-Arch_diagram.png)
 
+With eval : 
+[View AI Realtor Architecture Diagram](AI-Realtor-Arch_diagram.png)
+
 3. What are the RAG and agent components of your project, exactly?
 
 ## RAG Components
