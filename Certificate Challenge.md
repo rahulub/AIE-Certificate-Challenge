@@ -404,5 +404,7 @@ Please include the following in your final submission:
 
 **Loom Video** https://www.loom.com/share/abd549a800d744a6bd780bc12130bcee
 
-- A **written document** addressing each deliverable and answering each question
+- A **written document** addressing each deliverable and answering each question (This document)
+
 - All relevant code
+(There is README.md in "ai-realtor" folder about the software layout and how to start frontend and backend.)
