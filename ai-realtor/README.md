@@ -15,7 +15,7 @@ A streaming AI chat application for home inspection analysis with a Next.js fron
 | **RAG** | PDF → Chunker → Embedder (OpenAI) → Qdrant; collections: `reference_guidelines`, `user_reports` |
 | **Persistence** | Redis (chat history per `thread_id`); Qdrant (vector store) |
 | **External** | OpenAI (LLM + embeddings), Qdrant, Redis, Cohere (optional), Tavily |
-| **Eval** | RAGAS pipeline: `ragas_testset.json` → `evaluate.py` → `eval_results.json` |
+| **Eval** | RAGAS: `evaluate.py` (RAG/agent) → `eval_results*.json`; `evaluate_advanced.py` (Cohere rerank) → `eval_results_advanced.json` |
 
 ## Project Structure
 
@@ -27,15 +27,18 @@ ai-realtor/
 │   │   └── chat.py          # /api/chat streaming endpoint
 │   ├── requirements.txt
 │   └── .env.example         # Copy to .env and add your API keys
-├── eval/                     # RAGAS evaluation for RAG quality
-│   ├── evaluate.py           # Run RAGAS metrics (context precision, recall, faithfulness, etc.)
+├── eval/                     # RAGAS evaluation for RAG and agent
+│   ├── evaluate.py           # RAG chain or agent mode (--agent)
+│   ├── evaluate_advanced.py   # Agent with Cohere reranked tools
 │   ├── generate_testset.py   # Generate synthetic test set from docs
 │   ├── json_to_pdf.py        # Export test set to PDF report
 │   ├── pyproject.toml        # Python deps (ragas, langchain, openai)
 │   └── data/
-│       ├── ragas_testset.json    # Pre-built RAGAS test set (questions + references)
-│       ├── ragas_testset.pdf     # Human-readable test set report
-│       ├── eval_results.json     # Evaluation output (scores)
+│       ├── ragas_testset.json       # Pre-built RAGAS test set (questions + references)
+│       ├── ragas_testset.pdf        # Human-readable test set report
+│       ├── eval_results.json        # RAG chain output
+│       ├── eval_results_agent.json  # Agent mode output (evaluate.py --agent)
+│       ├── eval_results_advanced.json  # Advanced agent output (Cohere rerank)
 │       └── home_inspection_reference.txt  # Fallback doc when no PDFs
 └── frontend/
     ├── public/
@@ -79,10 +82,12 @@ npm start
 
 ## Evaluation (RAGAS)
 
-The `eval/` directory contains RAGAS-based evaluation for the RAG pipeline. See [eval/README.md](eval/README.md) for setup and workflow.
+The `eval/` directory contains RAGAS-based evaluation for the RAG pipeline and agent. See [eval/README.md](eval/README.md) for setup and workflow.
 
 - **Setup:** `cd eval && uv sync` (requires `OPENAI_API_KEY`)
-- **Run evaluation:** `uv run python evaluate.py` → outputs `data/eval_results.json`
+- **RAG chain:** `uv run python evaluate.py` → `data/eval_results.json`
+- **Agent mode:** `uv run python evaluate.py --agent` → `data/eval_results_agent.json` (uses `search_red_flag_guidelines`, `search_inspection_report`, `web_search`; requires Qdrant)
+- **Advanced agent:** `uv run python evaluate_advanced.py` → `data/eval_results_advanced.json` (uses Cohere reranked tools; requires `COHERE_API_KEY` and Qdrant)
 - **Generate test set:** `uv run python generate_testset.py` (optional, pre-built set included)
 
 ## What to implement
