@@ -3,6 +3,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, AIMessage
+from langgraph.errors import GraphRecursionError
 from langgraph.prebuilt import create_react_agent
 
 from tools import get_tools
@@ -59,6 +60,8 @@ SYSTEM_PROMPT = _build_system_prompt() + (
     "ORDER BY SEVERITY: Always present red flags in decreasing order of severity: 🔴 Critical first, then 🟠 Major, then 🟡 Minor.\n\n"
     "CRITICAL: Answer the user's specific question directly. NEVER repeat or re-state a full red-flag summary unless explicitly requested.\n"
     "- For FOLLOW-UP questions: Answer ONLY the new question. Do NOT repeat any prior summary, list, or analysis. "
+    "If prior messages contain Schools/Neighborhood sections, IGNORE them entirely for inspection-only follow-ups. "
+    "Answer only from the inspection findings. Never mention schools or neighborhood unless the current question is about them.\n"
     "Do NOT start with 'Based on the inspection report...' and then list all red flags again. "
     "Just answer the specific follow-up (e.g. if they ask 'what about the roof?' — give only roof-related info). "
     "If the follow-up changes topic to neighborhood, schools, area, amenities — use web_search and return ONLY web search results; "
@@ -79,6 +82,10 @@ SYSTEM_PROMPT = _build_system_prompt() + (
     "Do NOT add new issues from a new search. Do NOT say 'no critical issues found' if you already reported them. "
     "If the follow-up asks for costs, search web_search for repair estimates by issue name; do not re-search the report for the issues themselves.\n"
     "- Use the search tools to find relevant content, then respond with ONLY what answers the current question.\n"
+    "- STOP SEARCHING: Once you retrieve a finding from the inspection report (with description, severity, page number), STOP searching and answer. "
+    "Do NOT search again for the same topic or for 'recommended for further evaluation' — that is a recommendation to the buyer, not a signal you need more data. "
+    "Limit to 5–8 tool calls per question. If you have already called search_inspection_report and received relevant findings, respond with what you have. "
+    "If a finding says 'X inspection is recommended for further evaluation,' report it as-is. Do not search again to fulfill that recommendation.\n"
     "- When citing findings, always include the page number from the user's report.\n"
     "- NO HALLUCINATION: Only report issues that appear in search_inspection_report retrieval. NEVER invent issues. "
     "For FOLLOW-UPS about already-discussed issues: trust your prior message as the retrieved set; do not add issues from a new search.\n"
@@ -116,9 +123,13 @@ def _to_langchain_messages(history: list[dict]) -> list:
     return out
 
 
+RECURSION_LIMIT = 18
+
+
 async def run_agent(message: str, context: str = "", history: list[dict] | None = None):
     """
     Runs the LangChain ReAct agent and streams the response.
+    When recursion limit is hit, returns a fallback message.
     """
     agent = _build_agent()
 
@@ -133,12 +144,28 @@ async def run_agent(message: str, context: str = "", history: list[dict] | None 
     messages.append(HumanMessage(content=user_content))
     inputs = {"messages": messages}
 
-    async for chunk, _metadata in agent.astream(
-        inputs,
-        stream_mode="messages",
-    ):
-        if isinstance(chunk, AIMessage) and chunk.content:
-            yield chunk.content
+    try:
+        stream = agent.astream(
+            inputs,
+            stream_mode="messages",
+            config={"recursion_limit": RECURSION_LIMIT},
+        )
+        async for item in stream:
+            chunk = item[0] if isinstance(item, (list, tuple)) and len(item) >= 1 else item
+            # Only stream AIMessage content, NOT ToolMessage (raw RAG chunks)
+            if isinstance(chunk, AIMessage) and chunk.content:
+                yield chunk.content
+    except GeneratorExit:
+        try:
+            await stream.aclose()
+        except Exception:
+            pass
+        return
+    except GraphRecursionError:
+        yield (
+            "I wasn't able to complete a full analysis due to a step limit. "
+            "Please try asking a more focused question (e.g. 'what are the critical issues?' or 'tell me about the roof')."
+        )
 
 
 async def run_agent_for_eval(
@@ -163,7 +190,7 @@ async def run_agent_for_eval(
     user_content = f"[User-provided context:\n{context}\n\n]{message}" if context else message
     inputs = {"messages": [HumanMessage(content=user_content)]}
 
-    result = await agent.ainvoke(inputs)
+    result = await agent.ainvoke(inputs, config={"recursion_limit": RECURSION_LIMIT})
     messages = result.get("messages", [])
 
     tool_outputs = []

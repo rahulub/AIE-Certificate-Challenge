@@ -34,13 +34,18 @@ class ClearRequest(BaseModel):
 async def _stream_with_checkpoint(thread_id: str, message: str, context: str):
     """Streams agent response and checkpointes to Redis when done."""
     history = await get_history(thread_id) if thread_id else []
+    # Clear history only for neighborhood questions; keep history for inspection follow-ups
     if _is_neighborhood_question(message):
         history = []
     accumulated = []
 
-    async for token in run_agent(message, context, history):
-        accumulated.append(token)
-        yield token
+    try:
+        async for token in run_agent(message, context, history):
+            accumulated.append(token)
+            yield token
+    except GeneratorExit:
+        # Client disconnected during streaming; exit cleanly
+        return
 
     if thread_id:
         await save_messages(

@@ -78,8 +78,8 @@ export function ChatPanel({ context, onReset }: ChatPanelProps) {
 
   const buildContextStr = (isFollowUp: boolean) => {
     const prioritiesList =
-      isFollowUp && inspectionPrefs.length > 0
-        ? inspectionPrefs.join(", ")
+      isFollowUp
+        ? (inspectionPrefs.length > 0 ? inspectionPrefs.join(", ") : "General property condition")
         : priorities.length > 0
           ? priorities.join(", ")
           : "General property condition"
@@ -126,7 +126,11 @@ The inspection report does NOT contain school or neighborhood data — use web_s
       setError(null)
 
       try {
-        const isFollowUp = !!threadIdRef.current
+        // Use threadId OR prior assistant response to determine follow-up (handles threadId not set yet, e.g. fast follow-up before first response completes)
+        const hasPriorExchange =
+          messages.length >= 2 &&
+          messages.some((m) => m.role === "assistant" && m.content.length > 0)
+        const isFollowUp = !!(threadIdRef.current || hasPriorExchange)
         const body: { message: string; context?: string; thread_id?: string } = {
           message: text.trim(),
           context: buildContextStr(isFollowUp),
@@ -186,7 +190,7 @@ The inspection report does NOT contain school or neighborhood data — use web_s
         setIsStreaming(false)
       }
     },
-    [context, buildContextStr]
+    [context, buildContextStr, messages]
   )
 
   const handleSubmit = (e?: React.FormEvent) => {
