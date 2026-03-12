@@ -6,7 +6,7 @@ const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const fontSerif = DM_Serif_Display({ weight: "400", subsets: ["latin"], variable: "--font-serif" });
 
 export const metadata: Metadata = {
-  title: "AI Realtor - Property Analyzer",
+  title: "PropertyLens - Property Analyzer",
   description: "AI-powered property inspection report analysis. Get expert insights on your home inspection findings and buyer priorities.",
 };
 

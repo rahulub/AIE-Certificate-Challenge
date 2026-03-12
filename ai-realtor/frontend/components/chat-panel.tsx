@@ -294,7 +294,7 @@ The inspection report does NOT contain school or neighborhood data — use web_s
               </div>
               <div className="flex-1 min-w-0 pt-0.5">
                 <p className="text-xs font-medium text-muted-foreground mb-1.5">
-                  {message.role === "assistant" ? "AI Realtor" : "You"}
+                  {message.role === "assistant" ? "PropertyLens" : "You"}
                 </p>
                 <div className="text-sm text-foreground [&_h1]:text-lg [&_h1]:font-bold [&_h1]:mb-2 [&_h1]:mt-3 [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mb-2 [&_h2]:mt-3 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mb-1 [&_h3]:mt-2 [&_p]:mb-2 [&_p]:leading-relaxed [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-2 [&_li]:mb-1 [&_li]:leading-relaxed [&_strong]:font-semibold [&_code]:bg-muted [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs">
                   {message.role === "assistant" ? (
