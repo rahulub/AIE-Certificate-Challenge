@@ -39,7 +39,7 @@ services:
 
   # Frontend (Next.js)
   - type: web
-    name: propertylens-frontend
+    name: propertylens
     runtime: node
     region: oregon
 
