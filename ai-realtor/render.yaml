@@ -1,0 +1,66 @@
+# Render Blueprint for PropertyLens
+# Deploy: Connect repo to Render, then use this blueprint or create services manually.
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  # Backend (FastAPI)
+  - type: web
+    name: propertylens-backend
+    runtime: python
+    region: oregon
+
+    # Monorepo: set root to backend folder (use ai-realtor/backend if repo root is parent)
+    rootDir: ai-realtor/backend
+
+    buildCommand: uv sync
+    startCommand: uv run uvicorn main:app --host 0.0.0.0 --port $PORT
+
+    healthCheckPath: /health
+
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12"
+      - key: CORS_ORIGINS
+        sync: false
+        # Set in Render Dashboard: https://your-frontend.onrender.com
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: QDRANT_URL
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: propertylens-redis
+          property: connectionString
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: COHERE_API_KEY
+        sync: false
+
+  # Frontend (Next.js)
+  - type: web
+    name: propertylens-frontend
+    runtime: node
+    region: oregon
+
+    rootDir: ai-realtor/frontend
+
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NEXT_PUBLIC_BACKEND_URL
+        sync: false
+        # Set in Render Dashboard: https://propertylens-backend.onrender.com
+      - key: BACKEND_URL
+        sync: false
+        # Same as NEXT_PUBLIC_BACKEND_URL for API routes
+
+databases:
+  - name: propertylens-redis
+    plan: free
+    ipAllowList: []

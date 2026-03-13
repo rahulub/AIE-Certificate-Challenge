@@ -29,9 +29,10 @@ const nextConfig = {
     unoptimized: true,
   },
   async rewrites() {
+    const backend = process.env.BACKEND_URL || "http://localhost:8000";
     return [
-      { source: "/api/ingest", destination: "http://localhost:8000/api/ingest" },
-    ]
+      { source: "/api/ingest", destination: `${backend}/api/ingest` },
+    ];
   },
 }
 
