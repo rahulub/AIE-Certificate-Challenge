@@ -30,10 +30,8 @@ services:
       - key: QDRANT_API_KEY
         sync: false
       - key: REDIS_URL
-        fromService:
-          type: redis
-          name: propertylens-redis
-          property: connectionString
+        sync: false
+        # Add in Render Dashboard: create Redis (New > Redis) or use Upstash, then paste URL
       - key: TAVILY_API_KEY
         sync: false
       - key: COHERE_API_KEY
